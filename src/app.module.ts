@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { globalConfig } from './config';
 import { AppRequestContext } from './utils';
 import { DatabaseModule } from './modules/database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DatabaseModule } from './modules/database/database.module';
       contextClass: AppRequestContext,
     }),
     DatabaseModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

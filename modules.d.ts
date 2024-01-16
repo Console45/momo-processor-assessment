@@ -3,7 +3,7 @@ declare namespace NodeJS {
     DATABASE: 'postgres';
     DATABASE_URL: string;
     NODE_ENV: string = 'development';
-    PRIVATE_KEY: string;
+    SECRET_KEY: string;
     PORT: number | string;
   }
 }

@@ -5,14 +5,14 @@ const env = process.env;
 
 export interface GlobalConfig {
   auth: {
-    privateKey: string;
+    secretKey: string;
   };
   databaseUrl: string;
 }
 
 const GlobalConfigSchema = Joi.object<GlobalConfig>({
   auth: Joi.object<GlobalConfig['auth']>({
-    privateKey: Joi.string().required(),
+    secretKey: Joi.string().required(),
   }),
   databaseUrl: Joi.string().required(),
 });
@@ -20,7 +20,7 @@ const GlobalConfigSchema = Joi.object<GlobalConfig>({
 export const globalConfig = registerAs('global', () => {
   const config = {
     auth: {
-      privateKey: env.PRIVATE_KEY,
+      secretKey: env.SECRET_KEY,
     },
     databaseUrl: env.DATABASE_URL,
   } as GlobalConfig;
