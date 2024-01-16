@@ -5,6 +5,7 @@ import { globalConfig } from './config';
 import { AppRequestContext } from './utils';
 import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ClientModule } from './modules/client/client.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
     }),
     DatabaseModule,
     AuthModule,
+    ClientModule,
   ],
 })
 export class AppModule {}

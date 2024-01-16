@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { CreateClientDto } from '../dtos/auth.dto';
 import { generateApiKey } from 'generate-api-key';
@@ -12,17 +12,25 @@ export class AuthService {
 
   private readonly cryptr = new Cryptr(process.env.SECRET_KEY);
 
-  async createClient(createClientDto: CreateClientDto) {
+  async createClient(data: CreateClientDto) {
+    const existingClient = await this.databaseService.client.findUnique({
+      where: {
+        name: data.name,
+      },
+    });
+    if (existingClient) {
+      throw new ConflictException('Client application already exists');
+    }
     const client = await this.databaseService.client.create({
       data: {
-        ...createClientDto,
+        ...data,
         apiKeys: {
           create: {
             key: this.cryptr.encrypt(
               generateApiKey({
                 method: 'uuidv4',
                 dashes: false,
-                name: createClientDto.name,
+                name: data.name,
               }),
             ),
           },

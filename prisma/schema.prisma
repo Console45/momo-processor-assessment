@@ -12,7 +12,7 @@ datasource db {
 
 model Client {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   apiKeys   ApiKey[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
