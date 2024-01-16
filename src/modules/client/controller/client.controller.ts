@@ -9,6 +9,6 @@ export class ClientController {
 
   @Get('me')
   async getClientMe() {
-    return this.clientService.getClientMe();
+    return await this.clientService.getClientMe();
   }
 }

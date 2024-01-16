@@ -16,7 +16,7 @@ export class HeaderApiKeyStrategy extends PassportStrategy(
   @Inject(AuthService)
   authService: AuthService;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor() {
     super({ header: 'X-API-KEY', prefix: '' }, true, async (apiKey, done) => {
       return await this.validate(apiKey, done);
     });
