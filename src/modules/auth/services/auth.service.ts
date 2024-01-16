@@ -2,6 +2,7 @@ import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { CreateClientDto } from '../dtos/auth.dto';
 import { generateApiKey } from 'generate-api-key';
+import { ApikeyStatus } from '@prisma/client';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cryptr = require('cryptr');
 
@@ -36,7 +37,20 @@ export class AuthService {
           },
         },
       },
+      include: {
+        apiKeys: {
+          where: {
+            status: ApikeyStatus.ACTIVE,
+          },
+          select: {
+            key: true,
+          },
+        },
+      },
     });
+    client.apiKeys = client?.apiKeys?.map(
+      (apiKey) => (apiKey.key = this.cryptr.decrypt(apiKey.key)),
+    );
     return client;
   }
 }
