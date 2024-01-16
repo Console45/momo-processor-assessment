@@ -1,6 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ConfigService } from '@nestjs/config';
 import Strategy from 'passport-headerapikey';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { AuthService } from '../services/auth.service';
