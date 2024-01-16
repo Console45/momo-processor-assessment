@@ -4,7 +4,7 @@ import { AppRequestContext, getAppContextALS } from '../../../utils';
 
 // prettier-ignore
 const allowedAuthTypes = [
-   'jwt',
+   'api-key',
    
 ];
 
@@ -29,12 +29,8 @@ export class MixedAuthGuard
     }
     const req = this.getRequest(context);
     const ctx = getAppContextALS<AppRequestContext>();
-    // ctx.locale = req.headers['accept-language'] ?? 'en';
-    // ctx.authUser = req.user;
-    // ctx.rolesMap = {};
-    // for (const role of ctx.authUser.roles) {
-    //   ctx.rolesMap[role] = true;
-    // }
+    ctx.locale = req.headers['accept-language'] ?? 'en';
+    ctx.client = req.user.client;
 
     return res;
   }

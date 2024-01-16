@@ -21,7 +21,7 @@ model Client {
 model ApiKey {
   id       Int          @id @default(autoincrement())
   key      String       @unique
-  client   Client       @relation(fields: [clientId], references: [id])
+  client   Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId Int
   status   ApikeyStatus @default(ACTIVE)
 

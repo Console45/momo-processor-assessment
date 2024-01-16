@@ -1,7 +1,7 @@
 import { RequestContext } from '@medibloc/nestjs-request-context';
+import { Client } from '@prisma/client';
 
 export class AppRequestContext extends RequestContext {
-  // authUser: AuthUserEntity;
-  // rolesMap: Partial<Record<AuthUserRole, boolean>>;
-  // locale: string;
+  client: Client;
+  locale: string;
 }
