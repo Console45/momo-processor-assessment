@@ -1,7 +1,9 @@
+import { PrismaClient } from '@prisma/client';
 import { TestClient } from './utils/test-client';
 
 describe('AuthController (e2e)', () => {
   let testClient: TestClient;
+  const prismaClient = new PrismaClient();
 
   beforeAll(async () => {
     testClient = new TestClient();
@@ -12,9 +14,23 @@ describe('AuthController (e2e)', () => {
     await testClient.close();
   });
 
-  it('/register client', async () => {
+  it('register client', async () => {
     await testClient.httpRequest('post', '/auth/register', {
       statusCode: 201,
+      payload: {
+        name: 'app2',
+      },
+    });
+  });
+
+  it('throw error on existing client with name', async () => {
+    prismaClient.client.create({
+      data: {
+        name: 'app2',
+      },
+    });
+    await testClient.httpRequest('post', '/auth/register', {
+      expectErrorCode: 409,
       payload: {
         name: 'app2',
       },

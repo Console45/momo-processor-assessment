@@ -24,7 +24,7 @@ export class TestClientBase {
   get testingModule(): TestingModule {
     return this._testingModule;
   }
-  protected prisma = new PrismaClient();
+  readonly prisma = new PrismaClient();
 
   async init(configurator?: (builder: TestingModuleBuilder) => void) {
     const builder = Test.createTestingModule({
@@ -46,8 +46,7 @@ export class TestClientBase {
     await this._app.getHttpAdapter().getInstance().ready();
 
     await this.prisma.$connect();
-    const res = await this.prisma.client.deleteMany({});
-    console.log(res);
+    await this.prisma.client.deleteMany({});
   }
 
   async close() {
