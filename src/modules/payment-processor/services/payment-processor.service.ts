@@ -58,6 +58,9 @@ export class PaymentProcessorService {
     if (existingReference) {
       throw new ConflictException('Payment reference already exist');
     }
+    const paymentData = await this.databaseService.paymentData.create({
+      data: {},
+    });
     const payment = await this.databaseService.payment.create({
       data: {
         phoneNumber: this.phoneNumberService.toCode(data.phoneNumber),
@@ -65,6 +68,10 @@ export class PaymentProcessorService {
         clientId: ctx.client.id,
         oparator: data.operator,
         amount: data.amount,
+        paymentDataId: paymentData.id,
+      },
+      include: {
+        paymentData: true,
       },
     });
     this.paymentQueue.add(payment);
@@ -81,11 +88,6 @@ export class PaymentProcessorService {
         paymentMethod: 'momo',
         phoneNumber: data.phoneNumber,
       });
-      const paymentData = await this.databaseService.paymentData.create({
-        data: {
-          apiResponseText: JSON.stringify(res),
-        },
-      });
       await this.databaseService.payment.update({
         where: {
           id: data.id,
@@ -95,7 +97,16 @@ export class PaymentProcessorService {
             res?.statusCode === 200
               ? $Enums.PaymentStatus.pending
               : $Enums.PaymentStatus.failed,
-          paymentDataId: paymentData.id,
+          paymentData: {
+            update: {
+              where: {
+                id: data.paymentDataId,
+              },
+              data: {
+                apiResponseText: JSON.stringify(res),
+              },
+            },
+          },
         },
       });
     } catch (err) {
@@ -133,11 +144,16 @@ export class PaymentProcessorService {
       data: {
         status: data?.data?.status as $Enums.PaymentStatus,
         paymentData: {
-          update: {
+          upsert: {
             where: {
-              id: existingPayment.paymentDataId,
+              id: existingPayment?.paymentDataId,
             },
-            data: {
+            create: {
+              callbackResponseText: JSON.stringify(data),
+              paymentVendorReference: data?.data?.reference,
+              callbackResponseTime: new Date(),
+            },
+            update: {
               callbackResponseText: JSON.stringify(data),
               paymentVendorReference: data?.data?.reference,
               callbackResponseTime: new Date(),
@@ -169,7 +185,7 @@ export class PaymentProcessorService {
           paymentData: {
             update: {
               where: {
-                id: payment.paymentDataId,
+                id: payment?.paymentDataId,
               },
               data: {
                 statusCheckerResponseText: JSON.stringify(res),
