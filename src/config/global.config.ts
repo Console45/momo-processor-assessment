@@ -8,6 +8,7 @@ export interface GlobalConfig {
     secretKey: string;
   };
   databaseUrl: string;
+  paymentProviderKey: string;
 }
 
 const GlobalConfigSchema = Joi.object<GlobalConfig>({
@@ -15,6 +16,7 @@ const GlobalConfigSchema = Joi.object<GlobalConfig>({
     secretKey: Joi.string().required(),
   }),
   databaseUrl: Joi.string().required(),
+  paymentProviderKey: Joi.string().required(),
 });
 
 export const globalConfig = registerAs('global', () => {
@@ -23,6 +25,7 @@ export const globalConfig = registerAs('global', () => {
       secretKey: env.SECRET_KEY,
     },
     databaseUrl: env.DATABASE_URL,
+    paymentProviderKey: env.XYZ_API_KEY,
   } as GlobalConfig;
   const result = GlobalConfigSchema.validate(config, {
     allowUnknown: true,

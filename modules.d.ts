@@ -5,5 +5,6 @@ declare namespace NodeJS {
     NODE_ENV: string = 'development';
     SECRET_KEY: string;
     PORT: number | string;
+    XYZ_API_KEY: string;
   }
 }

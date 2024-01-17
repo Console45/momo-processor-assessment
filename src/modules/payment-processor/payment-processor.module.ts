@@ -6,6 +6,7 @@ import { PaymentProcessorService } from './services/payment-processor.service';
 import { SharedModule } from '../shared/shared.module';
 import { PaymentProcessController } from './controllers/payment-processor.controller';
 import { DatabaseModule } from '../database/database.module';
+import { PaymentProcessor } from './processors/payment.processor';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { DatabaseModule } from '../database/database.module';
     SharedModule,
     DatabaseModule,
   ],
-  providers: [PaymentProcessorService],
+  providers: [PaymentProcessorService, PaymentProcessor],
   controllers: [PaymentProcessController],
 })
 export class PaymentProcessModule {}
