@@ -1,3 +1,4 @@
+import { $Enums } from '@prisma/client';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import Strategy from 'passport-headerapikey';
@@ -28,6 +29,7 @@ export class HeaderApiKeyStrategy extends PassportStrategy(
     const key = await this.databaseService.apiKey.findUnique({
       where: {
         key: this.authService.decrypt(apiKey),
+        status: $Enums.ApikeyStatus.ACTIVE,
       },
       include: {
         client: true,
