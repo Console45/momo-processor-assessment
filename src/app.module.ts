@@ -6,6 +6,8 @@ import { AppRequestContext } from './utils';
 import { DatabaseModule } from './modules/database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ClientModule } from './modules/client/client.module';
+import { BullModule } from '@nestjs/bull';
+import { PaymentProcessModule } from './modules/payment-processor/payment-processor.module';
 
 @Module({
   imports: [
@@ -21,6 +23,13 @@ import { ClientModule } from './modules/client/client.module';
     DatabaseModule,
     AuthModule,
     ClientModule,
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
+    PaymentProcessModule,
   ],
 })
 export class AppModule {}

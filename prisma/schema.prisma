@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Client {
-  id        String   @id @default(uuid())
-  name      String   @unique
+  id        String    @id @default(uuid())
+  name      String    @unique
   apiKeys   ApiKey[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  payments  Payment[]
 }
 
 model ApiKey {
@@ -28,7 +29,52 @@ model ApiKey {
   @@index([key, clientId])
 }
 
+model Payment {
+  id               String        @id @default(uuid())
+  amount           Int
+  paymentReference String        @unique
+  client           Client        @relation(fields: [clientId], references: [id])
+  clientId         String
+  paymentMethod    PaymentMethod @default(momo)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  oparator         Operator
+  phoneNumber      String
+  paymentData      PaymentData?  @relation(fields: [paymentDataId], references: [id])
+  paymentDataId    String?       @unique
+  status           PaymentStatus @default(initiated)
+
+  @@index([paymentReference, clientId])
+}
+
+model PaymentData {
+  id                        String    @id @default(uuid())
+  apiResponseText           String?
+  callbackResponseText      String?
+  callbackResponseTime      DateTime?
+  statusCheckerResponseText String?
+  statusCheckerResponseTime DateTime?
+  Payment                   Payment?
+}
+
+enum PaymentMethod {
+  momo
+}
+
+enum Operator {
+  airtel_tigo
+  mtn
+  vodafone
+}
+
 enum ApikeyStatus {
   ACTIVE
   REVOKED
+}
+
+enum PaymentStatus {
+  initiated
+  failed
+  success
+  processing
 }
