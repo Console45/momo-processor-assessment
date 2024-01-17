@@ -4,6 +4,8 @@ import { QUEUE_NAMES } from '../types';
 import { AuthModule } from '../auth/auth.module';
 import { PaymentProcessorService } from './services/payment-processor.service';
 import { SharedModule } from '../shared/shared.module';
+import { PaymentProcessController } from './controllers/payment-processor.controller';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
   imports: [
@@ -12,8 +14,9 @@ import { SharedModule } from '../shared/shared.module';
     }),
     AuthModule,
     SharedModule,
+    DatabaseModule,
   ],
   providers: [PaymentProcessorService],
-  exports: [],
+  controllers: [PaymentProcessController],
 })
 export class PaymentProcessModule {}

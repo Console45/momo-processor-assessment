@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ClientModule } from './modules/client/client.module';
 import { BullModule } from '@nestjs/bull';
 import { PaymentProcessModule } from './modules/payment-processor/payment-processor.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { PaymentProcessModule } from './modules/payment-processor/payment-proces
       },
     }),
     PaymentProcessModule,
+    SharedModule,
   ],
 })
 export class AppModule {}

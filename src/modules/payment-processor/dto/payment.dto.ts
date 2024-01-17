@@ -23,9 +23,9 @@ export class CreatePaymentDto {
   paymentReference: string;
 
   @IsEnum(OPERATORS, {
-    message: 'Operator must be one of airtel_tigo, mtn, vodafone',
+    message: 'Operator must be one of AIRTEL_TIGO, MTN, VODAFONE',
   })
-  @IsNotEmpty()
+  @IsOptional()
   operator: OPERATORS;
 
   @IsPhoneNumber('GH')
