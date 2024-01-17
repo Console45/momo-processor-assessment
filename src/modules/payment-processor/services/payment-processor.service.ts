@@ -101,9 +101,10 @@ export class PaymentProcessorService {
     }
   }
   async handlePaymentCallback(data: PaymentResponseData) {
+    if (!data) throw new NotFoundException('Payment not found');
     const existingPayment = await this.databaseService.payment.findUnique({
       where: {
-        paymentReference: data.data.externalReference,
+        paymentReference: data?.data?.externalReference,
       },
     });
     if (!existingPayment) throw new NotFoundException('Payment not found');
@@ -112,7 +113,7 @@ export class PaymentProcessorService {
         id: existingPayment.id,
       },
       data: {
-        status: data.data.status as $Enums.PaymentStatus,
+        status: data?.data?.status as $Enums.PaymentStatus,
         paymentData: {
           update: {
             where: {
@@ -120,7 +121,7 @@ export class PaymentProcessorService {
             },
             data: {
               callbackResponseText: JSON.stringify(data),
-              paymentVendorReference: data.data.reference,
+              paymentVendorReference: data?.data?.reference,
               callbackResponseTime: new Date(),
             },
           },

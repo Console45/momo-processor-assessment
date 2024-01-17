@@ -31,6 +31,9 @@ export class ClientService {
       orderBy: {
         createdAt: paging.order || 'desc',
       },
+      include: {
+        paymentData: true,
+      },
     });
   }
 }
