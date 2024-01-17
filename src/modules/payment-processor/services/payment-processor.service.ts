@@ -1,9 +1,14 @@
 import { PhoneNumberService } from './../../shared/services/phone-number.service';
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { CreatePaymentDto } from '../dto/payment.dto';
 import { getAppContextALS, AppRequestContext } from 'src/utils';
-import { QUEUE_NAMES } from 'src/modules/types';
+import { PaymentResponseData, QUEUE_NAMES } from 'src/modules/types';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { XYZService } from 'src/modules/shared/services/xyz.service';
@@ -79,7 +84,7 @@ export class PaymentProcessorService {
         data: {
           status:
             res?.statusCode === 200
-              ? $Enums.PaymentStatus.processing
+              ? $Enums.PaymentStatus.pending
               : $Enums.PaymentStatus.failed,
           paymentDataId: paymentData.id,
         },
@@ -94,5 +99,34 @@ export class PaymentProcessorService {
         },
       });
     }
+  }
+  async handlePaymentCallback(data: PaymentResponseData) {
+    const existingPayment = await this.databaseService.payment.findUnique({
+      where: {
+        paymentReference: data.data.externalReference,
+      },
+    });
+    if (!existingPayment) throw new NotFoundException('Payment not found');
+    await this.databaseService.payment.update({
+      where: {
+        id: existingPayment.id,
+      },
+      data: {
+        status: data.data.status as $Enums.PaymentStatus,
+        paymentData: {
+          update: {
+            where: {
+              id: existingPayment.paymentDataId,
+            },
+            data: {
+              callbackResponseText: JSON.stringify(data),
+              paymentVendorReference: data.data.reference,
+              callbackResponseTime: new Date(),
+            },
+          },
+        },
+      },
+    });
+    return 'OK';
   }
 }

@@ -33,7 +33,7 @@ model Payment {
   id               String        @id @default(uuid())
   amount           Int
   paymentReference String        @unique
-  client           Client        @relation(fields: [clientId], references: [id])
+  client           Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   clientId         String
   paymentMethod    PaymentMethod @default(momo)
   createdAt        DateTime      @default(now())
@@ -77,5 +77,5 @@ enum PaymentStatus {
   initiated
   failed
   success
-  processing
+  pending
 }
