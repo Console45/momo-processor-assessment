@@ -1,13 +1,14 @@
+import { $Enums } from '@prisma/client';
+
 export enum QUEUE_NAMES {
   PAYMENT = 'payment',
 }
 
-export enum PAYMENT_METHODS {
-  MOMO = 'momo',
-}
-
-export enum OPERATORS {
-  AIRTEL_TIGO = 'AIRTEL_TIGO',
-  MTN = 'MTN',
-  VODAFONE = 'VODAFONE',
+export interface PaymentRequestData {
+  phoneNumber: string;
+  amount: number;
+  paymentMethod: $Enums.PaymentMethod;
+  operator: $Enums.Operator;
+  externalReference: string;
+  callbackUrl: string;
 }

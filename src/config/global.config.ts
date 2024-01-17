@@ -9,6 +9,9 @@ export interface GlobalConfig {
   };
   databaseUrl: string;
   paymentProviderKey: string;
+  redisHost: string;
+  redisPort: number;
+  backendUrl: string;
 }
 
 const GlobalConfigSchema = Joi.object<GlobalConfig>({
@@ -17,6 +20,9 @@ const GlobalConfigSchema = Joi.object<GlobalConfig>({
   }),
   databaseUrl: Joi.string().required(),
   paymentProviderKey: Joi.string().required(),
+  redisHost: Joi.string().required(),
+  redisPort: Joi.number().required(),
+  backendUrl: Joi.string().required(),
 });
 
 export const globalConfig = registerAs('global', () => {
@@ -26,6 +32,12 @@ export const globalConfig = registerAs('global', () => {
     },
     databaseUrl: env.DATABASE_URL,
     paymentProviderKey: env.XYZ_API_KEY,
+    redisHost: env.REDIS_HOST,
+    redisPort:
+      typeof env.REDIS_PORT === 'string'
+        ? parseInt(env.REDIS_PORT)
+        : env.REDIS_PORT,
+    backendUrl: env.BACKEND_URL,
   } as GlobalConfig;
   const result = GlobalConfigSchema.validate(config, {
     allowUnknown: true,

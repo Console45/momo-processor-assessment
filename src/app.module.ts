@@ -1,6 +1,6 @@
 import { RequestContextModule } from '@medibloc/nestjs-request-context';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { globalConfig } from './config';
 import { AppRequestContext } from './utils';
 import { DatabaseModule } from './modules/database/database.module';
@@ -24,11 +24,14 @@ import { SharedModule } from './modules/shared/shared.module';
     DatabaseModule,
     AuthModule,
     ClientModule,
-    BullModule.forRoot({
-      redis: {
-        host: 'localhost',
-        port: 6379,
-      },
+    BullModule.registerQueueAsync({
+      inject: [globalConfig.KEY],
+      useFactory: async (cfg: ConfigType<typeof globalConfig>) => ({
+        redis: {
+          host: cfg.redisHost,
+          port: cfg.redisPort,
+        },
+      }),
     }),
     PaymentProcessModule,
     SharedModule,

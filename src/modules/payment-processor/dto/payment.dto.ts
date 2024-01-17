@@ -1,3 +1,4 @@
+import { $Enums } from '@prisma/client';
 import {
   IsEnum,
   IsNotEmpty,
@@ -6,27 +7,26 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-import { OPERATORS, PAYMENT_METHODS } from 'src/modules/types';
 
 export class CreatePaymentDto {
   @IsNumber()
   amount: number;
 
-  @IsEnum(PAYMENT_METHODS, {
+  @IsEnum($Enums.PaymentMethod, {
     message: 'Payment method must be one of momo',
   })
   @IsOptional()
-  paymentMethod: PAYMENT_METHODS;
+  paymentMethod: $Enums.PaymentMethod;
 
   @IsString()
   @IsNotEmpty()
   paymentReference: string;
 
-  @IsEnum(OPERATORS, {
+  @IsEnum($Enums.Operator, {
     message: 'Operator must be one of AIRTEL_TIGO, MTN, VODAFONE',
   })
   @IsOptional()
-  operator: OPERATORS;
+  operator: $Enums.Operator;
 
   @IsPhoneNumber('GH')
   @IsString()

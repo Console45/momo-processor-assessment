@@ -55,6 +55,7 @@ model PaymentData {
   statusCheckerResponseText String?
   statusCheckerResponseTime DateTime?
   Payment                   Payment?
+  paymentVendorReference    String?
 }
 
 enum PaymentMethod {

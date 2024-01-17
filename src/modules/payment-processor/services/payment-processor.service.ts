@@ -3,9 +3,12 @@ import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/modules/database/services/database.service';
 import { CreatePaymentDto } from '../dto/payment.dto';
 import { getAppContextALS, AppRequestContext } from 'src/utils';
-import { OPERATORS, QUEUE_NAMES } from 'src/modules/types';
+import { QUEUE_NAMES } from 'src/modules/types';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { XYZService } from 'src/modules/shared/services/xyz.service';
+import { Payment, $Enums } from '@prisma/client';
+import { GlobalConfig, globalConfig } from 'src/config';
 
 @Injectable()
 export class PaymentProcessorService {
@@ -14,6 +17,12 @@ export class PaymentProcessorService {
 
   @Inject(PhoneNumberService)
   private readonly phoneNumberService: PhoneNumberService;
+
+  @Inject(XYZService)
+  xyzService: XYZService;
+
+  @Inject(globalConfig.KEY)
+  config: GlobalConfig;
 
   constructor(
     @InjectQueue(QUEUE_NAMES.PAYMENT)
@@ -25,7 +34,7 @@ export class PaymentProcessorService {
     if (!data.operator) {
       data.operator = this.phoneNumberService.provider(
         data.phoneNumber,
-      ) as OPERATORS;
+      ) as $Enums.Operator;
     }
     const existingReference = await this.databaseService.payment.findUnique({
       where: {
@@ -46,5 +55,44 @@ export class PaymentProcessorService {
     });
     this.paymentQueue.add(payment);
     return payment;
+  }
+
+  async submitPayment(data: Payment) {
+    try {
+      const res = this.xyzService.processPayment({
+        amount: data.amount,
+        callbackUrl: `${this.config.backendUrl}/payment/callback`,
+        externalReference: data.paymentReference,
+        operator: data.oparator,
+        paymentMethod: 'momo',
+        phoneNumber: data.phoneNumber,
+      });
+      const paymentData = await this.databaseService.paymentData.create({
+        data: {
+          apiResponseText: JSON.stringify(res),
+        },
+      });
+      await this.databaseService.payment.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          status:
+            res?.statusCode === 200
+              ? $Enums.PaymentStatus.processing
+              : $Enums.PaymentStatus.failed,
+          paymentDataId: paymentData.id,
+        },
+      });
+    } catch (err) {
+      await this.databaseService.payment.update({
+        where: {
+          id: data.id,
+        },
+        data: {
+          status: $Enums.PaymentStatus.failed,
+        },
+      });
+    }
   }
 }
