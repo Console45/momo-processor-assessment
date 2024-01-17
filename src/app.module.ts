@@ -9,7 +9,8 @@ import { ClientModule } from './modules/client/client.module';
 import { BullModule } from '@nestjs/bull';
 import { PaymentProcessModule } from './modules/payment-processor/payment-processor.module';
 import { SharedModule } from './modules/shared/shared.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +36,8 @@ import { SharedModule } from './modules/shared/shared.module';
     }),
     PaymentProcessModule,
     SharedModule,
+    ScheduleModule.forRoot(),
+    EventEmitterModule.forRoot(),
   ],
 })
 export class AppModule {}

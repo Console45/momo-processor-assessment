@@ -4,6 +4,10 @@ export enum QUEUE_NAMES {
   PAYMENT = 'payment',
 }
 
+export enum EVENT_NAMES {
+  STATUS_CHECK = 'status-check',
+}
+
 export interface PaymentRequestData {
   phoneNumber: string;
   amount: number;
