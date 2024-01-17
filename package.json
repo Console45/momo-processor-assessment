@@ -21,6 +21,7 @@
     "migrate:dev": "yarn prisma migrate dev"
   },
   "dependencies": {
+    "@fastify/static": "^6.12.0",
     "@medibloc/nestjs-request-context": "^1.0.1",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/bull": "^10.0.1",
@@ -32,6 +33,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-fastify": "9.0.11",
     "@nestjs/schedule": "^4.0.0",
+    "@nestjs/swagger": "^7.2.0",
     "@prisma/client": "^5.8.1",
     "axios": "^1.6.5",
     "bull": "^4.12.1",
