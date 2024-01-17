@@ -62,9 +62,9 @@ enum PaymentMethod {
 }
 
 enum Operator {
-  airtel_tigo
-  mtn
-  vodafone
+  AIRTEL_TIGO
+  MTN
+  VODAFONE
 }
 
 enum ApikeyStatus {

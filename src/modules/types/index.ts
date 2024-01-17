@@ -7,7 +7,7 @@ export enum PAYMENT_METHODS {
 }
 
 export enum OPERATORS {
-  AIRTEL_TIGO = 'airtel_tigo',
-  MTN = 'mtn',
-  VODAFONE = 'vodafone',
+  AIRTEL_TIGO = 'AIRTEL_TIGO',
+  MTN = 'MTN',
+  VODAFONE = 'VODAFONE',
 }
