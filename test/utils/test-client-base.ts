@@ -64,9 +64,10 @@ export class TestClientBase {
       fields?: Record<string, any>;
       expectErrorCode?: string | number;
       statusCode?: string | number;
+      headers?: any;
     } = {},
   ) {
-    const headers = { ...this.defaultHeaders };
+    const headers = { ...this.defaultHeaders, ...opts.headers };
     const rb = request(this.app.getHttpServer())
       [method](path)
       .set(headers)
@@ -114,6 +115,7 @@ export class TestClientBase {
       fields?: Record<string, any>;
       expectErrorCode?: string | number;
       statusCode?: string | number;
+      headers?: any;
     } = {},
   ): Promise<T> {
     const response = await this.httpOperation(method, path, opts);

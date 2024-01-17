@@ -15,12 +15,13 @@ describe('AuthController (e2e)', () => {
   });
 
   it('register client', async () => {
-    await testClient.httpRequest('post', '/auth/register', {
+    const res = await testClient.httpRequest('post', '/auth/register', {
       statusCode: 201,
       payload: {
         name: 'app2',
       },
     });
+    expect(res?.name).toBe('app2');
   });
 
   it('throw error on existing client with name', async () => {
