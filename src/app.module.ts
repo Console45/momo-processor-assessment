@@ -11,6 +11,8 @@ import { PaymentProcessModule } from './modules/payment-processor/payment-proces
 import { SharedModule } from './modules/shared/shared.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AppController } from './controllers/app.controller';
+import { AppService } from './services/app.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,5 +41,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
