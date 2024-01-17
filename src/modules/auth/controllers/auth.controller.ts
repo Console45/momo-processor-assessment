@@ -1,4 +1,3 @@
-import { Client } from '@prisma/client';
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateClientDto } from '../dtos/auth.dto';
